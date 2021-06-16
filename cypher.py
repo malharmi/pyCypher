@@ -4,11 +4,14 @@ import sys
 
 
 def caesar(text, val):
-    encrypted = ''
-    for char in text:
-        pos = get_char(char, val)
-        encrypted += chr(pos)
-    print('Caesar Encryption: ' + encrypted)
+    encrypted_text = []
+    for word in text:
+        encrypted_word = ''
+        for char in word:
+            pos = get_char(char, val)
+            encrypted_word += chr(pos)
+        encrypted_text.append(encrypted_word)
+    print('Caesar Encryption: ' + ' '.join(encrypted_text))
     print('')
     get_input()
 
@@ -24,31 +27,37 @@ def square(text):
               'k', 'l', 'm', 'n', 'o',
               'p', 'q', 'r', 's', 't',
               'u', 'v', 'w', 'x', 'y']
-    encoded = []
-    for char in text:
-        # ignore Z
-        if char != 'z':
-            encoded.append(matrix.index(char))
-        else:
-            encoded.append('z')
-    algo = input('Enter Algo to Use (N for NumPy, F for Fisher Yates): ').strip()
-    if algo == 'F':
-        fisher_yates(matrix, encoded)
-    if algo == 'N':
-        shuffle_matrix(matrix, encoded)
+    encoded_text = []
+    for word in text:
+        encoded_word = []
+        for char in word:
+            # ignore letter 'z'
+            if char != 'z':
+                encoded_word.append(matrix.index(char))
+            else:
+                encoded_word.append('z')
+        encoded_text.append(encoded_word)
+    algo = input('Enter Algo to Use (N for NumPy, F for Fisher Yates): ').strip().lower()
+    if algo == 'f':
+        fisher_yates(matrix, encoded_text)
+    if algo == 'n':
+        shuffle_matrix(matrix, encoded_text)
     else:
         get_input()
 
 
-def encrypted_square(shuffled, encoded):
-    encrypted = ''
-    for i in encoded:
-        # ignore Z
-        if i != 'z':
-            encrypted += shuffled[i]
-        if i == 'z':
-            encrypted += 'z'
-    print('Square Encryption: ' + encrypted)
+def encrypted_square(shuffled, encoded_text):
+    encrypted_text = []
+    for word in encoded_text:
+        encrypted_word = ''
+        for i in word:
+            # ignore letter 'z'
+            if i != 'z':
+                encrypted_word += shuffled[i]
+            if i == 'z':
+                encrypted_word += 'z'
+        encrypted_text.append(encrypted_word)
+    print('Square Encryption: ' + ' '.join(encrypted_text))
     print('')
     get_input()
 
@@ -76,31 +85,21 @@ def shuffle_print(shuffled):
     print('')
     print('SHUFFLED SQUARE: ')
     print('---------------------')
-    print('| ' + ' | '.join(shuffled[:5]) + ' |')
-    print('---------------------')
-    print('| ' + ' | '.join(shuffled[5:10]) + ' |')
-    print('---------------------')
-    print('| ' + ' | '.join(shuffled[10:15]) + ' |')
-    print('---------------------')
-    print('| ' + ' | '.join(shuffled[15:20]) + ' |')
-    print('---------------------')
-    print('| ' + ' | '.join(shuffled[20:25]) + ' |')
-    print('---------------------')
-    print('')
-    print('JavaScript Array: ')
-    print(shuffled)
+    for i in range(0, len(shuffled), 5):
+        print('| ' + ' | '.join(shuffled[i:i+5]) + ' |')
+        print('---------------------')
     print('')
     return
 
 
 def get_input():
-    choose = input('Enter Cipher Type (C or S or exit): ')
-    if choose == 'C':
-        text = input('Enter Text to Encrypt: ').lower().strip()
+    choose = input('Enter Cipher Type (C or S or exit): ').lower()
+    if choose == 'c':
+        text = input('Enter Text to Encrypt: ').lower().split()
         val = int(input('Enter Number between 0-25: '))
         caesar(text, val)
-    if choose == 'S':
-        text = input('Enter Text to Encrypt: ').lower().strip()
+    if choose == 's':
+        text = input('Enter Text to Encrypt: ').lower().split()
         square(text)
     if choose == 'exit':
         print('Have a Good Day')
